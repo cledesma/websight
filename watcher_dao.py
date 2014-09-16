@@ -20,3 +20,11 @@ class WatcherDao:
             print "Existing Watcher: " + watcher.email
         return watcher  
 
+    def get_watchers(self, node_watchers):
+        watchers = []
+        for node_watcher in node_watchers:
+            watcher = self.session.query(Watcher).filter_by(id=node_watcher.watcher_id).first();
+            watchers.append(watcher)
+            print "Adding watcher: " + watcher.email
+        print "Watchers count: " + str(len(watchers))
+        return watchers

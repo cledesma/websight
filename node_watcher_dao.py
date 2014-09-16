@@ -6,9 +6,6 @@ class NodeWatcherDao:
         self.session = session
 
     def create(self, node_id, watcher_id):
-        # new_node_watcher = NodeWatcher(node_id=node_id, watcher_id=watcher_id)
-        # self.session.add(new_node_watcher)
-        # self.session.commit()
         self.get_or_create_node_watcher(self.session, node_id, watcher_id)
 
     def get_or_create_node_watcher(self, session, node_id, watcher_id):
@@ -21,3 +18,8 @@ class NodeWatcherDao:
         else:
             print "Existing Node ID: " + str(node_watcher.node_id) + " Existing Watcher ID: " + str(node_watcher.watcher_id)
         return node_watcher
+
+    def get_node_watchers(self, node_id):
+        node_watchers = self.session.query(NodeWatcher).filter_by(node_id=node_id).all();
+        print "Node Watchers count: " + str(len(node_watchers))
+        return node_watchers

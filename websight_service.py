@@ -21,3 +21,12 @@ class WebsightService:
         watcher_id = self.watcher_dao.create(email)
         self.node_watcher_dao.create(node_id, watcher_id)
 
+    # def check_site(self, node):
+    #     node.url
+    #     node.id
+
+    def notify_watchers(self, node):
+        node_watchers = self.node_watcher_dao.get_node_watchers(node.id)
+        watchers = self.watcher_dao.get_watchers(node_watchers)
+
+
