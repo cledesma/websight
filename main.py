@@ -5,11 +5,10 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello():
-	return "Hello World!"
+    return "Hello World!"
 
 if __name__== "__main__":
-	srv = WebsightService()
-	srv.create_node('http://www.ewise.com')
-	srv.create_watcher('carlo@devcon.ph')
-	app.run()
+    srv = WebsightService()
+    srv.register_node_watcher('http://dev.ewise.com', 'cledesma@ewise.com')
+    app.run()
 
