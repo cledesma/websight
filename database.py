@@ -18,5 +18,5 @@ class Node(Base):
 
 def init():
 	db = create_engine('sqlite:///websight.db')
-	print db
 	Base.metadata.create_all(db)
+	return db
