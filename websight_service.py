@@ -6,6 +6,7 @@ from watcher_dao import WatcherDao
 from node_watcher_dao import NodeWatcherDao
 import httplib2
 import smtplib
+import os
 
 class WebsightService:
 
@@ -58,18 +59,20 @@ class WebsightService:
         try: 
             print "begin send_mail"
             print "Watchers: " + str(watchers)
+            email_username = os.environ['WEBSIGHT_MAIL_USERNAME']
+            email_password = os.environ['WEBSIGHT_MAIL_PASSWORD']
             to_list = []
             cc_list = []
             bcc_list = watchers
-            header  = 'From: %s\n' % "ewise.websight@gmail.com"
+            header  = 'From: %s\n' % os.environ['WEBSIGHT_MAIL_USERNAME']
             header += 'To: %s\n' % ','.join(to_list)
             header += 'Cc: %s\n' % ','.join(cc_list)
             header += 'Subject: %s\n\n' % "Website is unreachable"
             message = header + exception
             smtp_server = smtplib.SMTP('smtp.gmail.com', 587)
             smtp_server.starttls()
-            smtp_server.login("ewise.websight@gmail.com", "qwerty0-")
-            smtp_server.sendmail("ewise.websight@gmail.com", bcc_list, message)
+            smtp_server.login(email_username, email_password)
+            smtp_server.sendmail(email_username, bcc_list, message)
             smtp_server.quit()
             print "end send_mail"
         except Exception, e:
