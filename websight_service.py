@@ -5,6 +5,7 @@ from node_dao import NodeDao
 from watcher_dao import WatcherDao
 from node_watcher_dao import NodeWatcherDao
 import httplib2
+import smtplib
 
 class WebsightService:
 
@@ -27,7 +28,7 @@ class WebsightService:
         print "*** begin loop_through_nodes ***"
         nodes = self.node_dao.get_nodes()        
         for node in nodes:
-            # TODO Should be in different thread
+            # TODO Should be in different threads
             try:
                 self.check_site(node)
             except Exception, e:
@@ -48,6 +49,31 @@ class WebsightService:
         print "Exception: " + exception
         node_watchers = self.node_watcher_dao.get_node_watchers(node.id)
         watchers = self.watcher_dao.get_watchers(node_watchers)
-        #TODO Send email
+        watchers_list = []
+        for watcher in watchers:
+            watchers_list.append(watcher.email)
+        self.send_mail(watchers_list,exception)
+
+    def send_mail(self,watchers,exception):
+        try: 
+            print "begin send_mail"
+            print "Watchers: " + str(watchers)
+            to_list = []
+            cc_list = []
+            bcc_list = watchers
+            header  = 'From: %s\n' % "ewise.websight@gmail.com"
+            header += 'To: %s\n' % ','.join(to_list)
+            header += 'Cc: %s\n' % ','.join(cc_list)
+            header += 'Subject: %s\n\n' % "Website is unreachable"
+            message = header + exception
+            smtp_server = smtplib.SMTP('smtp.gmail.com', 587)
+            smtp_server.starttls()
+            smtp_server.login("ewise.websight@gmail.com", "qwerty0-")
+            smtp_server.sendmail("ewise.websight@gmail.com", bcc_list, message)
+            smtp_server.quit()
+            print "end send_mail"
+        except Exception, e:
+            print "Exception: " + str(e)
+
 
 
