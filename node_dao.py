@@ -19,3 +19,13 @@ class NodeDao:
         else:
             print "Existing Node: " + node.url
         return node 
+
+    def get_nodes(self):
+        nodes = self.session.query(Node).all()
+        print "Nodes count: " + str(len(nodes))
+        return nodes
+
+    def get_node(self, id):
+        node = self.session.query(Node).filter_by(id=id).first()
+        print "Node ID: " + str(node.id)
+        print "Node URL: " + node.url
