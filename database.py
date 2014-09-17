@@ -3,6 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import StaticPool
 
 Base = declarative_base()
 
@@ -23,6 +24,6 @@ class NodeWatcher(Base):
     watcher_id = Column(Integer)
 
 def init():
-    db = create_engine('sqlite:///websight.db')
+    db = create_engine('sqlite:///websight.db', connect_args={'check_same_thread':False}, poolclass=StaticPool)
     Base.metadata.create_all(db)
     return db
